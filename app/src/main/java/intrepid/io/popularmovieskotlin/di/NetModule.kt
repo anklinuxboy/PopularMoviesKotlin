@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class NetModule() {
+class NetModule {
 
     @Provides
     @Singleton
@@ -40,6 +40,8 @@ class NetModule() {
                 .build()
     }
 
+    @Provides
+    @Singleton
     fun provideMovieService(retrofit: Retrofit) : MovieService =
             retrofit.create(MovieService::class.java)
 }

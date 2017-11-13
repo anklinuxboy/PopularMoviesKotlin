@@ -7,8 +7,9 @@ import intrepid.io.popularmovieskotlin.di.DaggerAppComponent
 import intrepid.io.popularmovieskotlin.di.NetModule
 
 class MoviesApplication : Application() {
-
-    lateinit var appComponent: AppComponent
+    companion object {
+        lateinit var appComponent: AppComponent
+    }
 
     override fun onCreate() {
         super.onCreate()
