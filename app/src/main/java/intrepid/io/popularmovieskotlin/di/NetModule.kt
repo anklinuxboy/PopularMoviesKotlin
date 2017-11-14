@@ -1,6 +1,7 @@
 package intrepid.io.popularmovieskotlin.di
 
 import android.app.Application
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import dagger.Module
 import dagger.Provides
 import intrepid.io.popularmovieskotlin.API_BASE_URL
@@ -13,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class NetModule() {
+class NetModule {
 
     @Provides
     @Singleton
@@ -25,7 +26,8 @@ class NetModule() {
     @Provides
     @Singleton
     fun provideOkHttpClient(cache: Cache) : OkHttpClient {
-        val client = OkHttpClient.Builder();
+        val client = OkHttpClient.Builder()
+        client.addNetworkInterceptor(StethoInterceptor())
         return client.cache(cache).build()
     }
 
@@ -40,6 +42,8 @@ class NetModule() {
                 .build()
     }
 
+    @Provides
+    @Singleton
     fun provideMovieService(retrofit: Retrofit) : MovieService =
             retrofit.create(MovieService::class.java)
 }

@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildTypes.each {
+        it.buildConfigField 'String', 'OPEN_TMDB_API_KEY', MYTMDBOPENAPIKEY
+    }
 }
 
 kapt {
@@ -38,7 +41,7 @@ dependencies {
 
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.facebook.stetho:stetho:1.5.0'
-    compile 'com.facebook.stetho:stetho-urlconnection:1.4.0'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.jakewharton.timber:timber:4.5.1'
