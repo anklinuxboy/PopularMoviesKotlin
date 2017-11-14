@@ -1,6 +1,7 @@
 package intrepid.io.popularmovieskotlin.di
 
 import android.app.Application
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import dagger.Module
 import dagger.Provides
 import intrepid.io.popularmovieskotlin.API_BASE_URL
@@ -25,7 +26,8 @@ class NetModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(cache: Cache) : OkHttpClient {
-        val client = OkHttpClient.Builder();
+        val client = OkHttpClient.Builder()
+        client.addNetworkInterceptor(StethoInterceptor())
         return client.cache(cache).build()
     }
 
