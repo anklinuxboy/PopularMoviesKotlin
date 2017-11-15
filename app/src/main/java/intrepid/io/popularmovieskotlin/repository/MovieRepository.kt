@@ -7,21 +7,19 @@ import intrepid.io.popularmovieskotlin.db.MovieDao
 import intrepid.io.popularmovieskotlin.models.MovieInfo
 import intrepid.io.popularmovieskotlin.models.MovieResponse
 import intrepid.io.popularmovieskotlin.net.MovieService
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import javax.inject.Inject
 
 class MovieRepository {
     @Inject
     lateinit var movieService: MovieService
     @Inject
-    lateinit var movieDao : MovieDao
+    lateinit var movieDao: MovieDao
 
-    val compositeDisposable = CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
     var moviesData: MutableLiveData<List<MovieInfo>> = MutableLiveData()
 
@@ -52,11 +50,11 @@ class MovieRepository {
     }
 
     private fun getMoviesFromDB() {
-        compositeDisposable.add(Observable.fromCallable {movieDao.getSavedMovies()}
+        compositeDisposable.add(Observable.fromCallable { movieDao.getSavedMovies() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    if (it == null) {
+                    if (it.value == null) {
                         Log.d("test", "test movies not loaded from DB")
                         getMoviesFromApi()
                     } else {
@@ -67,7 +65,7 @@ class MovieRepository {
     }
 
     private fun insertMoviesInDB(moviesList: List<MovieInfo>?) {
-        compositeDisposable.add(Observable.fromCallable { movieDao.saveMovies(moviesList!!)}
+        compositeDisposable.add(Observable.fromCallable { movieDao.saveMovies(moviesList!!) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe())

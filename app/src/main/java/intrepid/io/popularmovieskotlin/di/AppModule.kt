@@ -17,10 +17,10 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun provideMovieDB(application: Application) : MovieDB =
+    fun provideMovieDB(application: Application): MovieDB =
             Room.databaseBuilder(application, MovieDB::class.java, "movies").build()
 
     @Provides
     @Singleton
-    fun provideMovieDao(movieDB: MovieDB) : MovieDao = movieDB.getMovieDao()
+    fun provideMovieDao(movieDB: MovieDB): MovieDao = movieDB.getMovieDao()
 }

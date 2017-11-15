@@ -14,7 +14,7 @@ interface MovieDao {
     fun getSavedMovies(): LiveData<List<MovieInfo>>
 
     @Query("SELECT * FROM movies WHERE movie_id = :id")
-    fun getMovieById(id: String) : MovieInfo
+    fun getMovieById(id: String): MovieInfo
 
     @Update(onConflict = REPLACE)
     fun updateMovie(movie: MovieInfo)

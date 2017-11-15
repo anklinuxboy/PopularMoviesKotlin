@@ -6,5 +6,5 @@ import intrepid.io.popularmovieskotlin.models.MovieInfo
 
 @Database(entities = arrayOf(MovieInfo::class), version = 1, exportSchema = false)
 abstract class MovieDB : RoomDatabase() {
-    abstract fun getMovieDao() : MovieDao
+    abstract fun getMovieDao(): MovieDao
 }
