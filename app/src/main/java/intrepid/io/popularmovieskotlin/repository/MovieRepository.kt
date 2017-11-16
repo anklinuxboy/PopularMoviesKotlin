@@ -29,7 +29,7 @@ class MovieRepository {
     }
 
     private fun getMovies() {
-        getMoviesFromDB()
+        getMoviesFromApi()
     }
 
     private fun getMoviesFromApi() {
@@ -54,21 +54,18 @@ class MovieRepository {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    if (it.value == null) {
-                        Log.d("test", "test movies not loaded from DB")
-                        getMoviesFromApi()
-                    } else {
-                        moviesData.value = it.value
-                        Log.d("test", "test movies loaded from db")
-                    }
+                    moviesData.value = it
                 })
     }
 
     private fun insertMoviesInDB(moviesList: List<MovieInfo>?) {
-        compositeDisposable.add(Observable.fromCallable { movieDao.saveMovies(moviesList!!) }
+        compositeDisposable.add(Observable.fromCallable {
+            movieDao.saveMovies(moviesList!!) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe())
+                .subscribe {
+                    getMoviesFromDB()
+                })
     }
 
     private fun setPosterUrlRating(movieList: List<MovieInfo>?) {
