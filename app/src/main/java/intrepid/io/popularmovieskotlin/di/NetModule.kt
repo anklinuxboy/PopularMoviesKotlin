@@ -18,14 +18,14 @@ class NetModule {
 
     @Provides
     @Singleton
-    fun provideCache(applicaton: Application) : Cache {
+    fun provideCache(applicaton: Application): Cache {
         val cacheSize = 15 * 1024 * 1024
         return Cache(applicaton.cacheDir, cacheSize.toLong())
     }
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(cache: Cache) : OkHttpClient {
+    fun provideOkHttpClient(cache: Cache): OkHttpClient {
         val client = OkHttpClient.Builder()
         client.addNetworkInterceptor(StethoInterceptor())
         return client.cache(cache).build()
@@ -33,7 +33,7 @@ class NetModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitClient(client: OkHttpClient) : Retrofit {
+    fun provideRetrofitClient(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -44,6 +44,6 @@ class NetModule {
 
     @Provides
     @Singleton
-    fun provideMovieService(retrofit: Retrofit) : MovieService =
+    fun provideMovieService(retrofit: Retrofit): MovieService =
             retrofit.create(MovieService::class.java)
 }

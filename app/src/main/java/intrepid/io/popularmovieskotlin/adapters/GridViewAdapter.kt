@@ -7,17 +7,15 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
-import intrepid.io.popularmovieskotlin.POSTER_URL
 import intrepid.io.popularmovieskotlin.R
-import intrepid.io.popularmovieskotlin.data.MovieInfo
+import intrepid.io.popularmovieskotlin.models.MovieInfo
 
-class GridViewAdapter(val context : Context, val movies : ArrayList<MovieInfo>) : BaseAdapter() {
+class GridViewAdapter(val context: Context, val movies: ArrayList<MovieInfo>) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val movie = getItem(position)
-        movie.posterUrl = POSTER_URL + movie.poster_path
-        var imageView : ImageView
-        val view : View?
+        var imageView: ImageView
+        val view: View?
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.layout_poster, parent, false)
             imageView = view.findViewById(R.id.movie_image)
@@ -37,5 +35,4 @@ class GridViewAdapter(val context : Context, val movies : ArrayList<MovieInfo>) 
     override fun getItemId(position: Int): Long = 0
 
     override fun getCount(): Int = movies.size
-
 }
