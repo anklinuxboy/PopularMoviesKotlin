@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="intrepid.io.popularmovieskotlin.MainActivity">
+    tools:context="intrepid.io.popularmovieskotlin.ui.MainActivity">
 
     <GridView
         android:id="@+id/grid_view"

@@ -1,10 +1,11 @@
-package intrepid.io.popularmovieskotlin;
+package intrepid.io.popularmovieskotlin.ui;
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.GridView
+import intrepid.io.popularmovieskotlin.R
 import intrepid.io.popularmovieskotlin.adapters.GridViewAdapter
 import intrepid.io.popularmovieskotlin.models.MovieInfo
 import intrepid.io.popularmovieskotlin.viewmodels.MovieViewModel
