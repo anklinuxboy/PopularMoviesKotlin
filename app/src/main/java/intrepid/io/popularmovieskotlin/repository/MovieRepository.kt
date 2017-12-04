@@ -43,7 +43,6 @@ class MovieRepository {
                 .subscribe({ movieList: List<MovieInfo>? ->
                     kotlin.run {
                         setPosterUrlRating(movieList)
-                        moviesData.value = movieList
                         insertMoviesInDB(movieList)
                     }
                 })
@@ -54,7 +53,7 @@ class MovieRepository {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    moviesData.value = it
+                    moviesData.value = it.value
                 })
     }
 
