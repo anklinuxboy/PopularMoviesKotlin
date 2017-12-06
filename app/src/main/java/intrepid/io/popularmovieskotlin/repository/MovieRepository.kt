@@ -1,7 +1,6 @@
 package intrepid.io.popularmovieskotlin.repository
 
 import android.arch.lifecycle.MutableLiveData
-import android.util.Log
 import intrepid.io.popularmovieskotlin.*
 import intrepid.io.popularmovieskotlin.db.MovieDao
 import intrepid.io.popularmovieskotlin.models.MovieInfo
@@ -59,7 +58,8 @@ class MovieRepository {
 
     private fun insertMoviesInDB(moviesList: List<MovieInfo>?) {
         compositeDisposable.add(Observable.fromCallable {
-            movieDao.saveMovies(moviesList!!) }
+            movieDao.saveMovies(moviesList!!)
+        }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
