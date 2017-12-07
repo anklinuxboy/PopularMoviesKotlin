@@ -1,7 +1,6 @@
 package intrepid.io.popularmovieskotlin.repository
 
 import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.MutableLiveData
 import intrepid.io.popularmovieskotlin.*
 import intrepid.io.popularmovieskotlin.db.MovieDao
 import intrepid.io.popularmovieskotlin.models.MovieInfo
@@ -26,10 +25,10 @@ class MovieRepository {
     init {
         MoviesApplication.appComponent.inject(this)
         moviesData.value = null
-        getMovies()
+        fetchMovies()
     }
 
-    private fun getMovies() {
+    private fun fetchMovies() {
         getMoviesFromApi()
     }
 
@@ -49,7 +48,7 @@ class MovieRepository {
                 })
     }
 
-    private fun getMoviesFromDB() {
+    private fun fetchMoviesFromDB() {
         compositeDisposable.add(Observable.fromCallable { movieDao.getSavedMovies() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -65,7 +64,7 @@ class MovieRepository {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    getMoviesFromDB()
+                    fetchMoviesFromDB()
                 })
     }
 
