@@ -29,10 +29,10 @@ class MovieRepository {
     }
 
     private fun fetchMovies() {
-        getMoviesFromApi()
+        fetchMoviesFromApi()
     }
 
-    private fun getMoviesFromApi() {
+    private fun fetchMoviesFromApi() {
         val movieApiCall = movieService.getMovies(SORT_PREF, BuildConfig.OPEN_TMDB_API_KEY)
 
         movieApiCall.subscribeOn(Schedulers.io())
