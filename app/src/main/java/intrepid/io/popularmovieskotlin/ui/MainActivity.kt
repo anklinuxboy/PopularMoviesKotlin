@@ -2,19 +2,21 @@ package intrepid.io.popularmovieskotlin.ui;
 
 import android.os.Bundle
 import android.widget.GridView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import dagger.hilt.android.AndroidEntryPoint
 import intrepid.io.popularmovieskotlin.R
 import intrepid.io.popularmovieskotlin.adapters.GridViewAdapter
 import intrepid.io.popularmovieskotlin.models.MovieInfo
 import intrepid.io.popularmovieskotlin.viewmodels.MovieViewModel
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private var movies = ArrayList<MovieInfo>()
-    lateinit var adapter: GridViewAdapter
-    lateinit var gridView: GridView
-    lateinit var movieViewModel: MovieViewModel
+    private lateinit var adapter: GridViewAdapter
+    private lateinit var gridView: GridView
+    private val movieViewModel: MovieViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +25,6 @@ class MainActivity : AppCompatActivity() {
         gridView = findViewById(R.id.grid_view)
         adapter = GridViewAdapter(this, movies)
         gridView.adapter = adapter
-        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
         movieViewModel.getMoviesData().observe(this, { moviesList: List<MovieInfo>? ->
             if (moviesList != null) {
                 movies.clear()

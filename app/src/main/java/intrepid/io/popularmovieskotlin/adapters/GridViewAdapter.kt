@@ -10,11 +10,11 @@ import com.squareup.picasso.Picasso
 import intrepid.io.popularmovieskotlin.R
 import intrepid.io.popularmovieskotlin.models.MovieInfo
 
-class GridViewAdapter(val context: Context, val movies: ArrayList<MovieInfo>) : BaseAdapter() {
+class GridViewAdapter(private val context: Context, private val movies: ArrayList<MovieInfo>) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val movie = getItem(position)
-        var imageView: ImageView
+        val imageView: ImageView
         val view: View?
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.layout_poster, parent, false)

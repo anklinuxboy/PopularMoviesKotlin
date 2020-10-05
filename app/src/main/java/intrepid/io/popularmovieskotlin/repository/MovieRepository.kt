@@ -14,6 +14,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class MovieRepository {
+
     @Inject
     lateinit var movieService: MovieService
 
