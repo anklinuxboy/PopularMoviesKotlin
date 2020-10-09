@@ -1,9 +1,12 @@
 package intrepid.io.popularmovieskotlin.di
 
-import android.app.Application
+import android.content.Context
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import intrepid.io.popularmovieskotlin.API_BASE_URL
 import intrepid.io.popularmovieskotlin.net.MovieService
 import okhttp3.Cache
@@ -13,14 +16,15 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+@InstallIn(ApplicationComponent::class)
 @Module
 class NetModule {
 
     @Provides
     @Singleton
-    fun provideCache(applicaton: Application): Cache {
+    fun provideCache(@ApplicationContext appCtx: Context): Cache {
         val cacheSize = 15 * 1024 * 1024
-        return Cache(applicaton.cacheDir, cacheSize.toLong())
+        return Cache(appCtx.cacheDir, cacheSize.toLong())
     }
 
     @Provides
@@ -35,15 +39,15 @@ class NetModule {
     @Singleton
     fun provideRetrofitClient(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(API_BASE_URL)
-                .client(client)
-                .build()
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .baseUrl(API_BASE_URL)
+            .client(client)
+            .build()
     }
 
     @Provides
     @Singleton
     fun provideMovieService(retrofit: Retrofit): MovieService =
-            retrofit.create(MovieService::class.java)
+        retrofit.create(MovieService::class.java)
 }

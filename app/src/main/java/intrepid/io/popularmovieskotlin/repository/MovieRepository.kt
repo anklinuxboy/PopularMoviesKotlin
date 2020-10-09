@@ -13,20 +13,16 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
-class MovieRepository {
-
-    @Inject
-    lateinit var movieService: MovieService
-
-    @Inject
-    lateinit var movieDao: MovieDao
+class MovieRepository @Inject constructor(
+    private val movieService: MovieService,
+    private val movieDao: MovieDao
+) {
 
     private val compositeDisposable = CompositeDisposable()
 
     var moviesData: MediatorLiveData<List<MovieInfo>> = MediatorLiveData()
 
     init {
-        MoviesApplication.appComponent.inject(this)
         moviesData.value = null
         fetchMovies()
     }

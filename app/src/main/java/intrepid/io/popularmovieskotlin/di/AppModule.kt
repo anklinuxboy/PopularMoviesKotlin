@@ -1,24 +1,24 @@
 package intrepid.io.popularmovieskotlin.di
 
-import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import intrepid.io.popularmovieskotlin.db.MovieDB
 import intrepid.io.popularmovieskotlin.db.MovieDao
 import javax.inject.Singleton
 
+@InstallIn(ApplicationComponent::class)
 @Module
-class AppModule(private val application: Application) {
+object AppModule {
 
     @Provides
     @Singleton
-    fun provideApplication(): Application = application
-
-    @Provides
-    @Singleton
-    fun provideMovieDB(application: Application): MovieDB =
-            Room.databaseBuilder(application, MovieDB::class.java, "movies").build()
+    fun provideMovieDB(@ApplicationContext appCtx: Context): MovieDB =
+        Room.databaseBuilder(appCtx, MovieDB::class.java, "movies").build()
 
     @Provides
     @Singleton
