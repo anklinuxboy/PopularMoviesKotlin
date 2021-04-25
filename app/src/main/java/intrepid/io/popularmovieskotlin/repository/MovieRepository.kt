@@ -1,15 +1,17 @@
 package intrepid.io.popularmovieskotlin.repository
 
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import intrepid.io.popularmovieskotlin.*
 import intrepid.io.popularmovieskotlin.db.MovieDao
 import intrepid.io.popularmovieskotlin.models.MovieInfo
 import intrepid.io.popularmovieskotlin.models.MovieResponse
+import intrepid.io.popularmovieskotlin.models.MovieWithInfo
 import intrepid.io.popularmovieskotlin.net.MovieService
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,7 +24,7 @@ class MovieRepository {
 
     private val compositeDisposable = CompositeDisposable()
 
-    var moviesData: MediatorLiveData<List<MovieInfo>> = MediatorLiveData()
+    var moviesData: MediatorLiveData<List<MovieWithInfo>> = MediatorLiveData()
 
     init {
         MoviesApplication.appComponent.inject(this)
@@ -38,29 +40,28 @@ class MovieRepository {
         val movieApiCall = movieService.getMovies(SORT_PREF, BuildConfig.OPEN_TMDB_API_KEY)
 
         compositeDisposable.add(movieApiCall.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .map { response: MovieResponse? ->
                 return@map response?.results
             }
+            .flatMapIterable { it }
+            .flatMap({ t -> movieService.getMovieInfo(t.id, BuildConfig.OPEN_TMDB_API_KEY) }
+            ) { t1, t2 -> MovieWithInfo(t1, t2) }
+            .toList()
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { movieList: List<MovieInfo>? ->
-                    kotlin.run {
-                        setPosterUrlRating(movieList)
-                        insertMoviesInDB(movieList)
-                    }
-                },
-                {
-                    Timber.e(it.localizedMessage)
-                }))
+                { setMovies(it) },
+                { Timber.e(it.localizedMessage) }
+            )
+        )
     }
 
     private fun fetchMoviesFromDB() {
-        compositeDisposable.add(Observable.fromCallable { movieDao.getSavedMovies() }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                moviesData.addSource(it, moviesData::setValue)
-            })
+//        compositeDisposable.add(Observable.fromCallable { movieDao.getSavedMovies() }
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe {
+//                moviesData.addSource(it, moviesData::setValue)
+//            })
     }
 
     private fun insertMoviesInDB(moviesList: List<MovieInfo>?) {
@@ -74,12 +75,13 @@ class MovieRepository {
             })
     }
 
-    private fun setPosterUrlRating(movieList: List<MovieInfo>?) {
-        if (movieList != null) {
-            for (movie in movieList) {
-                movie.posterUrl = POSTER_URL + movie.poster_path
-                movie.voterRating = movie.vote_average + RATING
-            }
+    private fun setMovies(movieList: List<MovieWithInfo>) {
+        for (movie in movieList) {
+            movie.movieInfo.posterUrl = POSTER_URL + movie.movieInfo.poster_path
+            movie.movieInfo.voterRating = movie.movieInfo.vote_average + RATING
         }
+        val liveData = MutableLiveData<List<MovieWithInfo>>()
+        liveData.value = movieList
+        moviesData.addSource(liveData, moviesData::setValue)
     }
 }

@@ -9,7 +9,7 @@ import intrepid.io.popularmovieskotlin.net.MovieService
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
@@ -35,15 +35,15 @@ class NetModule {
     @Singleton
     fun provideRetrofitClient(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(API_BASE_URL)
-                .client(client)
-                .build()
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+            .baseUrl(API_BASE_URL)
+            .client(client)
+            .build()
     }
 
     @Provides
     @Singleton
     fun provideMovieService(retrofit: Retrofit): MovieService =
-            retrofit.create(MovieService::class.java)
+        retrofit.create(MovieService::class.java)
 }

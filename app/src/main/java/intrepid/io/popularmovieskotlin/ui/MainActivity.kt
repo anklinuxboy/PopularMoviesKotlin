@@ -1,29 +1,31 @@
 package intrepid.io.popularmovieskotlin.ui;
 
 import android.os.Bundle
-import android.widget.GridView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import intrepid.io.popularmovieskotlin.R
-import intrepid.io.popularmovieskotlin.adapters.GridViewAdapter
-import intrepid.io.popularmovieskotlin.models.MovieInfo
+import intrepid.io.popularmovieskotlin.adapters.MovieAdapter
+import intrepid.io.popularmovieskotlin.models.MovieWithInfo
 import intrepid.io.popularmovieskotlin.viewmodels.MovieViewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private var movies = ArrayList<MovieInfo>()
-    lateinit var adapter: GridViewAdapter
-    lateinit var gridView: GridView
+    private var movies = ArrayList<MovieWithInfo>()
+    private lateinit var adapter: MovieAdapter
+    private lateinit var recyclerView: RecyclerView
     private val movieViewModel by viewModels<MovieViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        gridView = findViewById(R.id.grid_view)
-        adapter = GridViewAdapter(this, movies)
-        gridView.adapter = adapter
-        movieViewModel.getMoviesData().observe(this) { moviesList: List<MovieInfo>? ->
+        recyclerView = findViewById(R.id.list_view)
+        adapter = MovieAdapter(movies)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
+        movieViewModel.getMoviesData().observe(this) { moviesList: List<MovieWithInfo>? ->
             if (moviesList != null) {
                 movies.clear()
                 movies.addAll(moviesList)
